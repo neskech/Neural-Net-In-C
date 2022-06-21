@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		306B5828281F34BB00E4A1FA /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 306B5827281F34BB00E4A1FA /* main.c */; };
+		306B5830281F34DC00E4A1FA /* Matrix.c in Sources */ = {isa = PBXBuildFile; fileRef = 306B582F281F34DC00E4A1FA /* Matrix.c */; };
+		306B5833281F3E1900E4A1FA /* Activations.c in Sources */ = {isa = PBXBuildFile; fileRef = 306B5832281F3E1900E4A1FA /* Activations.c */; };
+		306B583C2820AB6700E4A1FA /* Model.c in Sources */ = {isa = PBXBuildFile; fileRef = 306B583B2820AB6700E4A1FA /* Model.c */; };
+		3084C42828615E4B00356619 /* Vector.c in Sources */ = {isa = PBXBuildFile; fileRef = 3084C42728615E4B00356619 /* Vector.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +29,14 @@
 /* Begin PBXFileReference section */
 		306B5824281F34BB00E4A1FA /* Neural Net */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Neural Net"; sourceTree = BUILT_PRODUCTS_DIR; };
 		306B5827281F34BB00E4A1FA /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		306B582E281F34DC00E4A1FA /* Matrix.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Matrix.h; sourceTree = "<group>"; };
+		306B582F281F34DC00E4A1FA /* Matrix.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Matrix.c; sourceTree = "<group>"; };
+		306B5831281F3E1900E4A1FA /* Activations.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Activations.h; sourceTree = "<group>"; };
+		306B5832281F3E1900E4A1FA /* Activations.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Activations.c; sourceTree = "<group>"; };
+		306B583A2820AB6700E4A1FA /* Model.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Model.h; sourceTree = "<group>"; };
+		306B583B2820AB6700E4A1FA /* Model.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Model.c; sourceTree = "<group>"; };
+		3084C42628615E4B00356619 /* Vector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Vector.h; sourceTree = "<group>"; };
+		3084C42728615E4B00356619 /* Vector.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Vector.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +53,14 @@
 		306B581B281F34BB00E4A1FA = {
 			isa = PBXGroup;
 			children = (
+				3084C42628615E4B00356619 /* Vector.h */,
+				3084C42728615E4B00356619 /* Vector.c */,
+				306B583A2820AB6700E4A1FA /* Model.h */,
+				306B583B2820AB6700E4A1FA /* Model.c */,
+				306B5831281F3E1900E4A1FA /* Activations.h */,
+				306B5832281F3E1900E4A1FA /* Activations.c */,
+				306B582E281F34DC00E4A1FA /* Matrix.h */,
+				306B582F281F34DC00E4A1FA /* Matrix.c */,
 				306B5826281F34BB00E4A1FA /* Neural Net */,
 				306B5825281F34BB00E4A1FA /* Products */,
 			);
@@ -119,7 +139,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				306B5833281F3E1900E4A1FA /* Activations.c in Sources */,
+				306B583C2820AB6700E4A1FA /* Model.c in Sources */,
+				306B5830281F34DC00E4A1FA /* Matrix.c in Sources */,
 				306B5828281F34BB00E4A1FA /* main.c in Sources */,
+				3084C42828615E4B00356619 /* Vector.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
