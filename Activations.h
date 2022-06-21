@@ -18,16 +18,17 @@ typedef enum Activation{
     ARG_MAX
 } Activation;
 
-//inline float reLu(float input);
 
-inline float sigmoid(float input);
+float reLu(float input);
 
-inline float hyperbolic_tangent(float input);
+float sigmoid(float input);
 
-inline float leakyReLU(float input);
+float hyperbolic_tangent(float input);
 
-inline void softmax(Matrix* mat);
+float leakyReLU(float input);
 
-inline void argmax(Matrix* mat);
+void softmax(Matrix* mat);
+
+void argmax(Matrix* mat);
 
 #endif /* Activations_h */

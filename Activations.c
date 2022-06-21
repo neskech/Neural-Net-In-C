@@ -6,15 +6,14 @@
 //
 
 #include "Activations.h"
-#include "Matrix.h"
 
 #define MAX(x, y) x > y ? x : y
 
-inline float reLu(float input){
+float reLu(float input){
     return MAX(input, 0.0f);
 }
 
-inline float sigmoid(float input){
+float sigmoid(float input){
     return 0.0f;
 }
 

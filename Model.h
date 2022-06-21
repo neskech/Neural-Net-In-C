@@ -15,7 +15,7 @@
 
 typedef struct ForwardPassCache{
     Matrix* activations; //array of activations
-    //Matrix*
+    Matrix* outputs;
 } ForwardPassCache;
 
 typedef struct Model{
@@ -30,16 +30,30 @@ typedef struct Model{
 } Model;
 
 
-Model* new_model(void);
+Model* create_model(void);
+
+void free_cache(Model* model);
 
 void delete_model(Model* model);
+
+
 
 void add_layer(Model* m, int elem, Activation act);
 
 uint8_t compile(Model* m);
 
-Matrix eval(Model* m, Matrix x);
+void init_weights_and_biases(Model* m, float mean, float standard_deviation);
 
-void train(Model* m, Matrix x, Matrix y);
+
+void backProp(Model* m);
+
+void forwardProp(Model* m, Matrix* x);
+
+void train(Model* m, Matrix* x, Matrix* y, uint32_t num_iterations);
+
+
+Matrix eval(Model* m, Matrix* x);
+
+void summary(Model* m);
 
 #endif /* Model_h */

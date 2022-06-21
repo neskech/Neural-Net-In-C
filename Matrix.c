@@ -27,6 +27,12 @@ Matrix create_matrix_from_values(uint16_t rows, uint16_t cols, float* values){
     return mat;
 }
 
+void set_values_with(Matrix* mat, float val){
+    for (size_t i = 0; i < mat->rows * mat->cols; i++){
+        *(mat->values + i) = val;
+    }
+}
+
 Matrix dot(Matrix* mat_one, Matrix* mat_two){
     if (mat_one->rows != mat_two->rows && mat_one->cols != mat_two->cols)
         return create_matrix(0, 0);
@@ -93,8 +99,20 @@ Matrix sub(Matrix* mat_one, Matrix* mat_two){
     return new_mat;
 }
 
+void dot_in_place(Matrix* mat_one, Matrix* mat_two){
+    if (mat_one->rows != mat_two->rows && mat_one->cols != mat_two->cols)
+        return;
+        
+    for (size_t r = 0; r < mat_one->rows; ++r){
+        for (size_t c = 0; c < mat_one->cols; ++c){
+            uint16_t index = r * mat_one->cols + c;
+            *(mat_one->values + index) = (*(mat_one->values + index)) * (*(mat_two->values + index));
+        }
+    }
+}
 
-void mut_add(Matrix* mat_one, Matrix* mat_two){
+
+void add_in_place(Matrix* mat_one, Matrix* mat_two){
     if (mat_one->rows != mat_two->rows && mat_one->cols != mat_two->cols)
         return;
     
@@ -106,7 +124,7 @@ void mut_add(Matrix* mat_one, Matrix* mat_two){
     }
 }
 
-void mut_sub(Matrix* mat_one, Matrix* mat_two){
+void sub_in_place(Matrix* mat_one, Matrix* mat_two){
     if (mat_one->rows != mat_two->rows && mat_one->cols != mat_two->cols)
         return;
     
@@ -136,7 +154,7 @@ void scalar_div(Matrix* mat_one, float scalar){
     }
 }
 
-void forEach(Matrix* mat, int (*func)(float)){
+void matrix_for_each(Matrix* mat, float (*func)(float)){
     for (size_t r = 0; r < mat->rows; ++r){
         for (size_t c = 0; c < mat->cols; ++c){
             uint16_t index = r * mat->cols + c;
@@ -151,7 +169,7 @@ void tranpose(Matrix* mat){
     mat->rows = temp;
 }
 
-Matrix copy(Matrix* mat){
+Matrix matrix_copy(Matrix* mat){
     Matrix m;
     m.rows = mat->rows;
     m.cols = mat->cols;
@@ -162,6 +180,8 @@ Matrix copy(Matrix* mat){
 void delete_matrix(Matrix* mat){
     free(mat->values);
 }
+
+size_t size(Matrix* mat){ return mat->rows * mat->cols; }
 
 void print_matrix(Matrix* mat){
     printf("[");
