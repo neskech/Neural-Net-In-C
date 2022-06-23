@@ -24,6 +24,8 @@ Matrix create_matrix_from_values(uint16_t rows, uint16_t cols, float* values);
 
 void set_values_with(Matrix* mat, float val);
 
+
+
 Matrix dot(Matrix* mat_one, Matrix* mat_two);
 
 Matrix mult(Matrix* mat_one, Matrix* mat_two);
@@ -43,7 +45,7 @@ void add_in_place(Matrix* mat_one, Matrix* mat_two);
 void sub_in_place(Matrix* mat_one, Matrix* mat_two);
 
 
-void tranpose(Matrix* mat);
+void transpose(Matrix* mat);
 
 void scalar_mult(Matrix* mat_one, float scalar);
 

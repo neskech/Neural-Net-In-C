@@ -7,11 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		30581799286406DD0010B68B /* Set.c in Sources */ = {isa = PBXBuildFile; fileRef = 30581798286406DD0010B68B /* Set.c */; };
 		306B5828281F34BB00E4A1FA /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 306B5827281F34BB00E4A1FA /* main.c */; };
 		306B5830281F34DC00E4A1FA /* Matrix.c in Sources */ = {isa = PBXBuildFile; fileRef = 306B582F281F34DC00E4A1FA /* Matrix.c */; };
 		306B5833281F3E1900E4A1FA /* Activations.c in Sources */ = {isa = PBXBuildFile; fileRef = 306B5832281F3E1900E4A1FA /* Activations.c */; };
 		306B583C2820AB6700E4A1FA /* Model.c in Sources */ = {isa = PBXBuildFile; fileRef = 306B583B2820AB6700E4A1FA /* Model.c */; };
 		3084C42828615E4B00356619 /* Vector.c in Sources */ = {isa = PBXBuildFile; fileRef = 3084C42728615E4B00356619 /* Vector.c */; };
+		30A1B9D2286389F700F7FA02 /* Loss.c in Sources */ = {isa = PBXBuildFile; fileRef = 30A1B9D1286389F700F7FA02 /* Loss.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,6 +29,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		30581797286406DD0010B68B /* Set.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Set.h; sourceTree = "<group>"; };
+		30581798286406DD0010B68B /* Set.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Set.c; sourceTree = "<group>"; };
 		306B5824281F34BB00E4A1FA /* Neural Net */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Neural Net"; sourceTree = BUILT_PRODUCTS_DIR; };
 		306B5827281F34BB00E4A1FA /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		306B582E281F34DC00E4A1FA /* Matrix.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Matrix.h; sourceTree = "<group>"; };
@@ -37,6 +41,8 @@
 		306B583B2820AB6700E4A1FA /* Model.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Model.c; sourceTree = "<group>"; };
 		3084C42628615E4B00356619 /* Vector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Vector.h; sourceTree = "<group>"; };
 		3084C42728615E4B00356619 /* Vector.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Vector.c; sourceTree = "<group>"; };
+		30A1B9D0286389F700F7FA02 /* Loss.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Loss.h; sourceTree = "<group>"; };
+		30A1B9D1286389F700F7FA02 /* Loss.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Loss.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +59,10 @@
 		306B581B281F34BB00E4A1FA = {
 			isa = PBXGroup;
 			children = (
+				30581797286406DD0010B68B /* Set.h */,
+				30581798286406DD0010B68B /* Set.c */,
+				30A1B9D0286389F700F7FA02 /* Loss.h */,
+				30A1B9D1286389F700F7FA02 /* Loss.c */,
 				3084C42628615E4B00356619 /* Vector.h */,
 				3084C42728615E4B00356619 /* Vector.c */,
 				306B583A2820AB6700E4A1FA /* Model.h */,
@@ -140,7 +150,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				306B5833281F3E1900E4A1FA /* Activations.c in Sources */,
+				30581799286406DD0010B68B /* Set.c in Sources */,
 				306B583C2820AB6700E4A1FA /* Model.c in Sources */,
+				30A1B9D2286389F700F7FA02 /* Loss.c in Sources */,
 				306B5830281F34DC00E4A1FA /* Matrix.c in Sources */,
 				306B5828281F34BB00E4A1FA /* main.c in Sources */,
 				3084C42828615E4B00356619 /* Vector.c in Sources */,

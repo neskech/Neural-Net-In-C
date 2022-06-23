@@ -71,6 +71,7 @@ Matrix mult(Matrix* mat_one, Matrix* mat_two){
     
 }
 
+
 Matrix add(Matrix* mat_one, Matrix* mat_two){
     if (mat_one->rows != mat_two->rows && mat_one->cols != mat_two->cols)
         return create_matrix(0, 0);
@@ -163,7 +164,7 @@ void matrix_for_each(Matrix* mat, float (*func)(float)){
     }
 }
 
-void tranpose(Matrix* mat){
+void transpose(Matrix* mat){
     size_t temp = mat->cols;
     mat->cols = mat->rows;
     mat->rows = temp;
