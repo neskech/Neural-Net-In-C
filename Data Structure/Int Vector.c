@@ -1,27 +1,19 @@
-//
-//  Vector.c
-//  Neural Net
-//
-//  Created by Shaunte Mellor on 6/20/22.
-//
-
-#include "Vector.h"
 
 //
-//  Vector.c
+//  IntVector.c
 //  Neural Net
 //
 //  Created by Shaunte Mellor on 5/7/22.
 //
 
-#include "Vector.h"
+#include "Int Vector.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
 //can return by value, as the address of the pointer to the inner array is copied, and as such, not lost
-Vector create_vector(size_t capacity){
-    Vector vec;
+IntVector create_IntVector(size_t capacity){
+    IntVector vec;
     vec.size = 0;
     vec.capacity = capacity;
 
@@ -30,17 +22,17 @@ Vector create_vector(size_t capacity){
 }
 
 
-static void resize(Vector* vec){
+static void resize(IntVector* vec){
     vec->capacity *= 2;
     vec->elements = (int*) realloc(vec->elements, sizeof(int) * (vec->capacity));
 }
 
-static void shrink(Vector* vec){
+static void shrink(IntVector* vec){
     vec->capacity /= 2;
     vec->elements = (int*) realloc(vec->elements, sizeof(int) * (vec->capacity));
 }
 
-void push(Vector* vec, int elem){
+void push_int_vec(IntVector* vec, int elem){
     if (vec->size + 1 >= vec->capacity)
         resize(vec);
 
@@ -49,8 +41,7 @@ void push(Vector* vec, int elem){
     vec->size += 1;
 }
 
-//must free the return value later on!
-int pop(Vector* vec){
+int pop_int_vec(IntVector* vec){
     int hold = *(vec->elements + vec->size);
 
     vec->size -= 1;
@@ -60,11 +51,11 @@ int pop(Vector* vec){
     return hold;
 }
 
-int get(Vector* vec, size_t index){
+int get_int_vec(IntVector* vec, size_t index){
     return *(vec->elements + index);
 }
 
-int remove_at(Vector* vec, size_t index){
+int int_vec_remove_at(IntVector* vec, size_t index){
     int hold = *(vec->elements + index);
     for (size_t i = index; i < vec->size - 1; i++){
         *(vec->elements + i) = *(vec->elements + i + 1);
@@ -78,7 +69,7 @@ int remove_at(Vector* vec, size_t index){
 
 }
 
-void add_at(Vector* vec, size_t index, int elem){
+void int_vec_add_at(IntVector* vec, size_t index, int elem){
     if (vec->size + 1 >= vec->capacity)
         resize(vec);
 
@@ -91,10 +82,10 @@ void add_at(Vector* vec, size_t index, int elem){
     vec->size += 1;
 }
 
-void set_element(Vector* vec, size_t index, int elem){
+void int_vec_set_element(IntVector* vec, size_t index, int elem){
     *(vec->elements + index) = elem;
 }
 
-void delete_vector(Vector* vec){
+void delete_IntVector(IntVector* vec){
     free(vec->elements);
 }

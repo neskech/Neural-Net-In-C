@@ -8,9 +8,6 @@
 #include "Activations.h"
 #include <math.h>
 
-#define MAX(x, y) x > y ? x : y
-#define MIN(x, y) x < y ? x : y
-
 inline static float clamp(float x, float lower, float upper){
     return MAX( (MIN(x, upper)), lower );
 }

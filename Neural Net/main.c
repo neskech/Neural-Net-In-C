@@ -18,7 +18,7 @@ int main(int argc, const char * argv[]) {
     compile(m);
     init_weights_and_biases(m, 0, 0);
     
-    summary(m);
+    summary(m, 1);
     
     delete_model(m);
     

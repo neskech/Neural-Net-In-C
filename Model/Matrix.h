@@ -18,11 +18,16 @@ typedef struct Matrix{
     float* values;
 } Matrix;
 
+
 Matrix create_matrix(uint16_t rows, uint16_t cols);
 
 Matrix create_matrix_from_values(uint16_t rows, uint16_t cols, float* values);
 
 void set_values_with(Matrix* mat, float val);
+
+Matrix* matrix_array_from_data(float** data);
+
+void move_matrix(Matrix* from, Matrix* to);
 
 
 

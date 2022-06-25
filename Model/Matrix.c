@@ -33,6 +33,21 @@ void set_values_with(Matrix* mat, float val){
     }
 }
 
+void move_matrix(Matrix* from, Matrix* to){
+    if (to->values != NULL)
+        free(to->values);
+    
+    to->values = from->values;
+    to->rows = from->rows;
+    to->cols = from->cols;
+    from->values = NULL;
+}
+
+
+
+
+
+
 Matrix dot(Matrix* mat_one, Matrix* mat_two){
     if (mat_one->rows != mat_two->rows && mat_one->cols != mat_two->cols)
         return create_matrix(0, 0);

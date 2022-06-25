@@ -65,9 +65,9 @@ void init_weights_and_biases(Model* m, float mean, float standard_dev){
             val = rand() / (float)RAND_MAX;
             
             if (r % 2 == 0)
-                val = sqrt(-2.0f * log(val)) * cos(2.0f * M_PI * val);
+                val = sqrtf(-2.0f * log(val)) * cos(2.0f * M_PI * val);
             else
-                val = sqrt(-2.0f * log(val)) * sin(2.0f * M_PI * val);
+                val = sqrtf(-2.0f * log(val)) * sin(2.0f * M_PI * val);
             
             val = val * standard_dev + mean;
             *((m->weights + i)->values + r) = val;
@@ -77,9 +77,9 @@ void init_weights_and_biases(Model* m, float mean, float standard_dev){
             val = rand() / (float)RAND_MAX;
             
             if (r % 2 == 0)
-                val = sqrt(-2.0f * log(val)) * cos(2.0f * M_PI * val);
+                val = sqrtf(-2.0f * log(val)) * cos(2.0f * M_PI * val);
             else
-                val = sqrt(-2.0f * log(val)) * sin(2.0f * M_PI * val);
+                val = sqrtf(-2.0f * log(val)) * sin(2.0f * M_PI * val);
             
             val = val * standard_dev + mean;
             *((m->biases + i)->values + r) = val;
@@ -119,15 +119,21 @@ float loss_on_dataset(Model* m, Matrix* x, Matrix* y, uint32_t num_data_points){
         summed_loss += loss_func(&eval_, y + i, m->loss_func);
         delete_matrix(&eval_);
     }
-    return summed_loss
+    return summed_loss / num_data_points;
 }
 
-float estimated_loss_on_dataset(Model* m, Matrix* x, Matrix* y, uint32_t num_data_points){
-    //Only sample a portion of the dataset. To avoid bias, make this sampling randomized
+static float gradient_magnitude(Gradients* grads, uint16_t numLayers){
+    float sum = 0.0f;
+    for (size_t i = 0; i < numLayers - 1; i++){
+        
+        for (size_t a = 0; a < (grads->weights + i)->rows * (grads->weights + i)->cols; a++)
+            sum += (grads->weights + i)->values[a] * (grads->weights + i)->values[a];
+        for (size_t b = 0; b < (grads->biases + i)->rows * (grads->biases+ i)->cols; b++)
+            sum += (grads->biases + i)->values[b] * (grads->biases + i)->values[b];
+    }
     
+    return sqrtf(sum);
 }
-
-
 
 
 static void forwardProp(Model* m, Matrix* x, ForwardPassCache* cache){
@@ -174,8 +180,12 @@ static void backProp(Model* m, Matrix* observ, ForwardPassCache* cache, Gradient
         
         //Get the derivative of the weights and biases and store them...
         grads->biases[i] = running_deriv;
+        
         //matrix multiply the outputs of layer - 1 (represented by activations[i]) and the running_deriv
-        grads->weights[i] = mult(cache->activations + i, &running_deriv);
+        //Transpose the activations so the resulting matrix has the same shape as the weights matrix
+        transpose(cache->activations + i);
+        grads->weights[i] = mult(&running_deriv, cache->activations + i);
+        transpose(cache->activations + i); //undo the transpose, even though theres no need :)
         
         //Continue on with the chain rule by multiplying the weights transpose by the running_deriv
         if (i != 0){
@@ -184,7 +194,7 @@ static void backProp(Model* m, Matrix* observ, ForwardPassCache* cache, Gradient
             //since matrix multiplication creates a new matrix, we must delete the previous value of
             //running_deriv to prevent a memory leak...
             Matrix before = running_deriv;
-            running_deriv = mult(m->weights, &running_deriv);
+            running_deriv = mult(m->weights + i, &running_deriv);
             delete_matrix(&before);
             
             transpose(m->weights + i); //undo transpose
@@ -214,7 +224,7 @@ static void free_gradients(Gradients* grads, uint16_t numLayers){
     }
 }
 
-static void apply_batching(Model* m, Matrix* inputs, Matrix* observ, ForwardPassCache* cache, Gradients* avg_grads){
+static void apply_batching(Model* m, Matrix* inputs, Matrix* observ, ForwardPassCache* cache, Gradients* avg_grads, float* cumulative_loss){
     //allocate the gradients that will be used from datapoint to datapoint
     Gradients grads;
     grads.weights = (Matrix*) calloc(sizeof(Matrix), m->numLayers - 1);
@@ -240,6 +250,10 @@ static void apply_batching(Model* m, Matrix* inputs, Matrix* observ, ForwardPass
             add_in_place(avg_grads->biases + j, grads.biases + j);
         }
         
+        if (cumulative_loss != NULL){
+            *cumulative_loss += loss_func(cache->activations + m->numLayers - 1, observ, m->loss_func);
+        }
+        
         free_cache(cache, m->numLayers);
         free_gradients(&grads, m->numLayers);
     }
@@ -260,7 +274,13 @@ static void apply_gradients(Model* m, Gradients* grads){
 }
 
 
-void train(Model* m, Matrix* x, Matrix* y, uint32_t num_iterations){
+void train(Model* m, Matrix* x, Matrix* y, uint32_t num_data_points, uint32_t num_iterations){
+    //do some validation...
+    if (num_data_points > m->params.batch_size || num_data_points <= 0){
+        delete_model(m);
+        printf("ERROR: Bad parameters for train function. Exiting...\n");
+        exit(-1);
+    }
     
     ForwardPassCache cache;
     cache.activations = (Matrix*) calloc(sizeof(Matrix), m->numLayers);
@@ -271,15 +291,44 @@ void train(Model* m, Matrix* x, Matrix* y, uint32_t num_iterations){
     grads.biases = (Matrix*) calloc(sizeof(Matrix), m->numLayers - 1);
     
     float loss = 0.0f;
+    uint32_t num_times_loss_decrease = 0;
     for (uint32_t i = 0; i < num_iterations; i++){
         
+        //Do some batching on the dataset and optionally retrieve the loss on that batch
+        float curr_loss = 0.0f;
+        if (m->tuning.use_tuning || m->params.verbose >= 1)
+            apply_batching(m, x, y, &cache, &grads, &curr_loss);
+        else
+            apply_batching(m, x, y, &cache, &grads, NULL);
         
         
-        apply_batching(m, x, y, &cache, &grads);
+        //If our verbose variable is > 0, we want to print some metadata about the model's current state
+        if (m->params.verbose >= 1){
+            printf("Iteration #%d, -- Loss: %f", i, curr_loss);
+            if (m->params.verbose == 2)
+                printf(" Gradient Magnitude: %f\n", m->params.learning_rate * gradient_magnitude(&grads, m->numLayers));
+            else
+                printf("\n");
+        }
+        
+        //apply the gradients to the weights and biases and the matrices within them
         apply_gradients(m, &grads);
         free_gradients(&grads, m->numLayers);
+
+        //learning rate tuning -- will decrement the learning rate if the loss hasn't decreased for a certain number of iterations
+        if (i != 0 && m->tuning.use_tuning && curr_loss < loss){
+            num_times_loss_decrease++;
+            
+            if (num_times_loss_decrease == m->tuning.patience){
+                m->params.learning_rate = MAX(m->params.learning_rate * m->tuning.decrease, m->tuning.min);
+                num_times_loss_decrease  = 0;
+            }
+        }
+        
+        loss = curr_loss;
     }
     
+    //free the allocated space for the cache and gradients
     free(cache.activations);
     free(cache.outputs);
     

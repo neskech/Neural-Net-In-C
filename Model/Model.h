@@ -29,6 +29,7 @@ typedef struct ForwardPassCache{
 typedef struct ModelParams{
     float learning_rate;
     uint32_t batch_size;
+    uint8_t verbose;
     
     float momentum;
     float EXPWA;
@@ -68,7 +69,7 @@ void delete_model(Model* model);
 
 
 float loss_on_dataset(Model* m, Matrix* x, Matrix* y, uint32_t num_data_points);
-float estimated_loss_on_dataset(Model* m, Matrix* x, Matrix* y, uint32_t num_data_points);
+float estimated_loss_on_dataset(Model* m, Matrix* x, Matrix* y, uint32_t desired_data_points);
 
 
 
@@ -80,7 +81,7 @@ uint8_t compile(Model* m);
 
 void init_weights_and_biases(Model* m, float mean, float standard_deviation);
 
-void train(Model* m, Matrix* x, Matrix* y, uint32_t num_iterations);
+void train(Model* m, Matrix* x, Matrix* y, uint32_t num_data_points, uint32_t num_iterations);
 
 
 Matrix eval(Model* m, Matrix* x);
