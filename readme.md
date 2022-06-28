@@ -1,8 +1,8 @@
 # A Forward Neural Network
 
-**Made From Scratch in C+**
+**Made From Scratch in C**
 
-This is my first project in c, 
+This is my first project in c, and what better way to learn the ropes than to make my own neural net!
 
 
 
@@ -55,10 +55,10 @@ cmake --build .
      -  Display of Training Statistics Using a Python Script
      -  Reading of CSV files
 
-## Get Started
-     
+- Get Started
+  -
      - `src/core/main.c` contains helpful example code, along with `dataPlot.py`
-     - Once you train a model, plot the loss using the 'dataPlot.py' python script
+     - Once you train a model, plot the loss using the `dataPlot.py` python script
      - inside the `data` directory, there's an example CSV for training 
      - There is also an example json file in the `training data` directory that can be used to plot loss with the python script
   
