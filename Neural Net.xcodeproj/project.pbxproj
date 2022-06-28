@@ -7,15 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		30581799286406DD0010B68B /* Set.c in Sources */ = {isa = PBXBuildFile; fileRef = 30581798286406DD0010B68B /* Set.c */; };
-		3058179E2864FEC20010B68B /* Linked List.c in Sources */ = {isa = PBXBuildFile; fileRef = 3058179D2864FEC20010B68B /* Linked List.c */; };
 		305817A1286508FA0010B68B /* Data Loader.c in Sources */ = {isa = PBXBuildFile; fileRef = 305817A0286508FA0010B68B /* Data Loader.c */; };
-		305817A7286523890010B68B /* Int Vector.c in Sources */ = {isa = PBXBuildFile; fileRef = 305817A6286523890010B68B /* Int Vector.c */; };
-		305817AA2865242D0010B68B /* Float Vector.c in Sources */ = {isa = PBXBuildFile; fileRef = 305817A92865242D0010B68B /* Float Vector.c */; };
 		306B5828281F34BB00E4A1FA /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 306B5827281F34BB00E4A1FA /* main.c */; };
 		306B5830281F34DC00E4A1FA /* Matrix.c in Sources */ = {isa = PBXBuildFile; fileRef = 306B582F281F34DC00E4A1FA /* Matrix.c */; };
 		306B5833281F3E1900E4A1FA /* Activations.c in Sources */ = {isa = PBXBuildFile; fileRef = 306B5832281F3E1900E4A1FA /* Activations.c */; };
 		306B583C2820AB6700E4A1FA /* Model.c in Sources */ = {isa = PBXBuildFile; fileRef = 306B583B2820AB6700E4A1FA /* Model.c */; };
+		308CF3C72866B04400DAF327 /* Vector.c in Sources */ = {isa = PBXBuildFile; fileRef = 308CF3C62866B04400DAF327 /* Vector.c */; };
+		308CF3CA2867C21E00DAF327 /* Training.c in Sources */ = {isa = PBXBuildFile; fileRef = 308CF3C92867C21E00DAF327 /* Training.c */; };
 		30A1B9D2286389F700F7FA02 /* Loss.c in Sources */ = {isa = PBXBuildFile; fileRef = 30A1B9D1286389F700F7FA02 /* Loss.c */; };
 /* End PBXBuildFile section */
 
@@ -32,16 +30,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		30581797286406DD0010B68B /* Set.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Set.h; sourceTree = "<group>"; };
-		30581798286406DD0010B68B /* Set.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Set.c; sourceTree = "<group>"; };
-		3058179C2864FEC20010B68B /* Linked List.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Linked List.h"; sourceTree = "<group>"; };
-		3058179D2864FEC20010B68B /* Linked List.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "Linked List.c"; sourceTree = "<group>"; };
 		3058179F286508FA0010B68B /* Data Loader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Data Loader.h"; sourceTree = "<group>"; };
 		305817A0286508FA0010B68B /* Data Loader.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "Data Loader.c"; sourceTree = "<group>"; };
-		305817A5286523890010B68B /* Int Vector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Int Vector.h"; sourceTree = "<group>"; };
-		305817A6286523890010B68B /* Int Vector.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "Int Vector.c"; sourceTree = "<group>"; };
-		305817A82865242D0010B68B /* Float Vector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Float Vector.h"; sourceTree = "<group>"; };
-		305817A92865242D0010B68B /* Float Vector.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "Float Vector.c"; sourceTree = "<group>"; };
 		306B5824281F34BB00E4A1FA /* Neural Net */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Neural Net"; sourceTree = BUILT_PRODUCTS_DIR; };
 		306B5827281F34BB00E4A1FA /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		306B582E281F34DC00E4A1FA /* Matrix.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Matrix.h; sourceTree = "<group>"; };
@@ -50,6 +40,10 @@
 		306B5832281F3E1900E4A1FA /* Activations.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Activations.c; sourceTree = "<group>"; };
 		306B583A2820AB6700E4A1FA /* Model.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Model.h; sourceTree = "<group>"; };
 		306B583B2820AB6700E4A1FA /* Model.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Model.c; sourceTree = "<group>"; };
+		308CF3C52866B04300DAF327 /* Vector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Vector.h; sourceTree = "<group>"; };
+		308CF3C62866B04400DAF327 /* Vector.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Vector.c; sourceTree = "<group>"; };
+		308CF3C82867C21E00DAF327 /* Training.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Training.h; sourceTree = "<group>"; };
+		308CF3C92867C21E00DAF327 /* Training.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Training.c; sourceTree = "<group>"; };
 		30A1B9D0286389F700F7FA02 /* Loss.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Loss.h; sourceTree = "<group>"; };
 		30A1B9D1286389F700F7FA02 /* Loss.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Loss.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -68,14 +62,8 @@
 		3058179A2864FE860010B68B /* Data Structure */ = {
 			isa = PBXGroup;
 			children = (
-				30581797286406DD0010B68B /* Set.h */,
-				30581798286406DD0010B68B /* Set.c */,
-				3058179C2864FEC20010B68B /* Linked List.h */,
-				3058179D2864FEC20010B68B /* Linked List.c */,
-				305817A5286523890010B68B /* Int Vector.h */,
-				305817A6286523890010B68B /* Int Vector.c */,
-				305817A82865242D0010B68B /* Float Vector.h */,
-				305817A92865242D0010B68B /* Float Vector.c */,
+				308CF3C52866B04300DAF327 /* Vector.h */,
+				308CF3C62866B04400DAF327 /* Vector.c */,
 			);
 			path = "Data Structure";
 			sourceTree = "<group>";
@@ -91,6 +79,8 @@
 				306B5832281F3E1900E4A1FA /* Activations.c */,
 				306B582E281F34DC00E4A1FA /* Matrix.h */,
 				306B582F281F34DC00E4A1FA /* Matrix.c */,
+				308CF3C82867C21E00DAF327 /* Training.h */,
+				308CF3C92867C21E00DAF327 /* Training.c */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -181,15 +171,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				306B5833281F3E1900E4A1FA /* Activations.c in Sources */,
-				3058179E2864FEC20010B68B /* Linked List.c in Sources */,
-				305817AA2865242D0010B68B /* Float Vector.c in Sources */,
 				305817A1286508FA0010B68B /* Data Loader.c in Sources */,
-				30581799286406DD0010B68B /* Set.c in Sources */,
 				306B583C2820AB6700E4A1FA /* Model.c in Sources */,
 				30A1B9D2286389F700F7FA02 /* Loss.c in Sources */,
+				308CF3C72866B04400DAF327 /* Vector.c in Sources */,
 				306B5830281F34DC00E4A1FA /* Matrix.c in Sources */,
-				305817A7286523890010B68B /* Int Vector.c in Sources */,
 				306B5828281F34BB00E4A1FA /* main.c in Sources */,
+				308CF3CA2867C21E00DAF327 /* Training.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

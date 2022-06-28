@@ -29,9 +29,11 @@ Matrix* matrix_array_from_data(float** data);
 
 void move_matrix(Matrix* from, Matrix* to);
 
-
-
+//element wise dot product
 Matrix dot(Matrix* mat_one, Matrix* mat_two);
+
+//element wise division 
+Matrix matrix_div(Matrix* mat_one, Matrix* mat_two); //naming conflict, preface with 'matrix_'
 
 Matrix mult(Matrix* mat_one, Matrix* mat_two);
 
@@ -42,19 +44,33 @@ Matrix sub(Matrix* mat_one, Matrix* mat_two);
 
 Matrix matrix_copy(Matrix* mat);
 
+float magnitude(Matrix* mat);
+
+void reciprocal(Matrix* mat);
 
 void dot_in_place(Matrix* mat_one, Matrix* mat_two);
+
+void div_in_place(Matrix* mat_one, Matrix* mat_two);
 
 void add_in_place(Matrix* mat_one, Matrix* mat_two);
 
 void sub_in_place(Matrix* mat_one, Matrix* mat_two);
 
 
-void transpose(Matrix* mat);
 
-void scalar_mult(Matrix* mat_one, float scalar);
+Matrix transpose(Matrix* mat);
+Matrix transpose_copy(Matrix* mat);
 
-void scalar_div(Matrix* mat_one, float scalar);
+
+void scalar_mult(Matrix* mat, float scalar);
+
+void scalar_div(Matrix* mat, float scalar);
+
+void scalar_add(Matrix* mat, float scalar);
+
+void matrix_square(Matrix* mat);
+
+void matrix_sqrt(Matrix* mat);
 
 void matrix_for_each(Matrix* mat, float (*func)(float));
 

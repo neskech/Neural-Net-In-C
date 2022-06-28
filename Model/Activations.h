@@ -16,8 +16,11 @@ typedef enum Activation{
     RELU = 0,
     SIGMOID,
     HYPERBOLIC_TANGENT,
+    SOFT_PLUS,
+    LINEAR,
     SOFT_MAX,
-    ARG_MAX
+    ARG_MAX,
+    NONE,
 } Activation;
 
 
@@ -27,25 +30,29 @@ void sigmoid(Matrix* mat);
 
 void hyperbolic_tangent(Matrix* mat);
 
+void soft_plus(Matrix* mat);
+
 void softmax(Matrix* mat);
 
-void argmax(Matrix* mat);
+uint32_t argmax(Matrix* mat);
 
 
 
-void reLu_deriv(Matrix* mat);
+void reLu_deriv(Matrix* mat, Matrix* observ);
 
-void sigmoid_deriv(Matrix* mat);
+void sigmoid_deriv(Matrix* mat, Matrix* observ);
 
-void hyperbolic_tangent_deriv(Matrix* mat);
+void hyperbolic_tangent_deriv(Matrix* mat, Matrix* observ);
 
-void softmax_deriv(Matrix* mat);
+void soft_plus_deriv(Matrix* mat, Matrix* observ);
+
+void softmax_deriv(Matrix* mat, Matrix* observ);
 
 
 
 void act_func(Matrix* mat, Activation act);
 
-void act_func_deriv(Matrix* mat, Activation act);
+void act_func_deriv(Matrix* mat, Matrix* observ, Activation act);
 
 
 #endif /* Activations_h */

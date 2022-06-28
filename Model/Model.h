@@ -32,13 +32,12 @@ typedef struct ModelParams{
     uint8_t verbose;
     
     float momentum;
-    float EXPWA;
+    float momentum2;
     float epsillon;
     
 } ModelParams;
 
 typedef struct LearningRateTuning{
-    uint8_t use_tuning;
     uint32_t patience;
     float decrease;
     float min;
@@ -46,42 +45,48 @@ typedef struct LearningRateTuning{
 
 
 typedef struct Model{
-    uint8_t numLayers;
+    uint8_t numLayers; //never going to exceed more than 255 layers (hopefully)
     Vector layerSizes;
     Vector activations;
     
     Matrix* weights;
     Matrix* biases;
     
+    //expwa = exponentially weighted averged
+    Matrix* expwa_weights;
+    Matrix* expwa_biases;
+    
+    Matrix* expwa_weights_squared;
+    Matrix* expwa_biases_squared;
+    
     Loss loss_func;
     
     ModelParams params;
+    uint8_t use_tuning;
     LearningRateTuning tuning;
-
 } Model;
 
 
 
-Model* create_model(void);
+Model* create_model(ModelParams* params, LearningRateTuning* tuning);
+
+Model* load_model(const char* path);
+
+void save_model(Model* m, const char* path);
 
 void delete_model(Model* model);
 
 
 
 float loss_on_dataset(Model* m, Matrix* x, Matrix* y, uint32_t num_data_points);
-float estimated_loss_on_dataset(Model* m, Matrix* x, Matrix* y, uint32_t desired_data_points);
-
-
 
 void add_layer(Model* m, int elem, Activation act);
 
-void add_loss_func(Model* m, Loss loss_func_);
-
-uint8_t compile(Model* m);
+void set_loss_func(Model* m, Loss loss_func_);
 
 void init_weights_and_biases(Model* m, float mean, float standard_deviation);
 
-void train(Model* m, Matrix* x, Matrix* y, uint32_t num_data_points, uint32_t num_iterations);
+uint8_t compile(Model* m);
 
 
 Matrix eval(Model* m, Matrix* x);

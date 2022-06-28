@@ -1,37 +1,39 @@
-//
-//  IntVector.h
+
+//  Vector.h
 //  Neural Net
 //
 //  Created by Shaunte Mellor on 6/20/22.
 //
 
-#ifndef IntVector_h
-#define IntVector_h
+#ifndef Vector_h
+#define Vector_h
 
 #include <stdio.h>
 
 
-typedef struct IntVector{
+typedef struct Vector{
     int* elements;
     size_t size;
     size_t capacity;
-} IntVector;
+} Vector;
 
-IntVector create_IntVector(size_t capacity);
+Vector create_vector(size_t capacity);
 
-void push(IntVector* vec, int elem);
+void push(Vector* vec, int elem);
 
-int pop(IntVector* vec);
+int pop(Vector* vec);
 
-int get(IntVector* vec, size_t index);
+int get(Vector* vec, size_t index);
 
-int remove_at(IntVector* vec, size_t index);
+int remove_at(Vector* vec, size_t index);
 
-void add_at(IntVector* vec, size_t index, int elem);
+void add_at(Vector* vec, size_t index, int elem);
 
-void set_element(IntVector* vec, size_t index, int elem);
+void set_element(Vector* vec, size_t index, int elem);
 
-void delete_IntVector(IntVector* vec);
+void delete_vector(Vector* vec);
+
+void print_vector(Vector* vec);
 
 
-#endif /* IntVector_h */
+#endif /* Vector_h */
