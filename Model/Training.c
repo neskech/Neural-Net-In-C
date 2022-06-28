@@ -38,7 +38,7 @@ static void write_meta_data(const char* path, float* loss_data, float* gradient_
     
     fprintf(f, "{\n\n");
     
-    fprintf(f, "  \"Loss\": [\n");
+    fprintf(f, "  \"loss\": [\n");
     for (uint32_t i = 0; i < num_epochs; i++){
         if (i != num_epochs - 1)
             fprintf(f, "    %f,\n", loss_data[i]);
@@ -47,7 +47,7 @@ static void write_meta_data(const char* path, float* loss_data, float* gradient_
     }
     fprintf(f, "   ],\n\n");
     
-    fprintf(f, "  \"GradientMag\": [\n");
+    fprintf(f, "  \"gradient magnitude\": [\n");
     for (uint32_t i = 0; i < num_epochs; i++){
         if (i != num_epochs - 1)
             fprintf(f, "    %f,\n", gradient_mag_data[i]);
