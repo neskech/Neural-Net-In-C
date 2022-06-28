@@ -11,9 +11,8 @@
 #include <stdio.h>
 #include "Model.h"
 
-void train(Model* m, Matrix* x, Matrix* y, uint32_t num_data_points, uint32_t num_epochs, uint8_t write_to_file, const char* file_name);
+//trains the model. Optionally writes training data to a file. If NULL is passed in for the string, no such data will be written
+uint8_t train(Model* m, Matrix* inputs, Matrix* observ, uint32_t num_data_points, uint32_t num_epochs, const char* file_name);
 
-void MAX_THREADS(size_t num_threads);
-void ENABLE_THREADING(void);
 
 #endif /* Training_h */

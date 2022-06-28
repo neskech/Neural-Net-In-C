@@ -19,6 +19,10 @@ typedef struct Vector{
 
 Vector create_vector(size_t capacity);
 
+void delete_vector(Vector* vec);
+
+
+
 void push(Vector* vec, int elem);
 
 int pop(Vector* vec);
@@ -31,7 +35,7 @@ void add_at(Vector* vec, size_t index, int elem);
 
 void set_element(Vector* vec, size_t index, int elem);
 
-void delete_vector(Vector* vec);
+
 
 void print_vector(Vector* vec);
 

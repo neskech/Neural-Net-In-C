@@ -12,9 +12,9 @@
 #define CLIP_RANGE 15
 
 inline static float clamp(float x, float lower, float upper){
-    float min = x < upper ? x : upper;
-    float max = min > lower ? min : lower;
-    return max;
+    float a = x < upper ? x : upper;
+    float b = a > lower ? a : lower;
+    return b;
 }
 
 void reLu(Matrix* mat){
@@ -46,29 +46,11 @@ void soft_plus(Matrix* mat){
     }
 }
 
-void softmax(Matrix* mat){
-    float max = 0.0f;
-    for (size_t i = 0; i < mat->rows * mat->cols; i++){
-        if (mat->values[i] > max)
-            max = mat->values[i];
-    }
-    
-    float num;
-    float denom = 0.0f;
-    for (size_t i = 0; i < mat->rows * mat->cols; i++){
-        denom += expf(mat->values[i] - max);
-    }
-    
-    for (size_t i = 0; i < mat->rows * mat->cols; i++){
-        num = expf(mat->values[i] - max);
-        mat->values[i] = num / denom;
-    }
-}
 
 uint32_t argmax(Matrix* mat){
     float max = mat->values[0];
     uint32_t max_dex = 0;
-    for (size_t i = 1; i < mat->rows * mat->cols; i++){
+    for (uint32_t i = 1; i < mat->rows * mat->cols; i++){
         if (mat->values[i] > max){
             max = mat->values[i];
             max_dex = i;
@@ -78,16 +60,14 @@ uint32_t argmax(Matrix* mat){
 }
 
 
-
-
-void reLu_deriv(Matrix* mat, Matrix* observ){
+void reLu_deriv(Matrix* mat){
     for (size_t i = 0; i < mat->rows * mat->cols; i++){
         mat->values[i] = clamp(mat->values[i], -CLIP_RANGE, CLIP_RANGE);
         mat->values[i] = clamp(mat->values[i], 0.0f, 1.0f);
     }
 }
 
-void sigmoid_deriv(Matrix* mat, Matrix* observ){
+void sigmoid_deriv(Matrix* mat){
     for (size_t i = 0; i < mat->rows * mat->cols; i++){
         mat->values[i] = clamp(mat->values[i], -CLIP_RANGE, CLIP_RANGE);
         mat->values[i]  = expf(-mat->values[i] ) / ( (1.0f + expf(mat->values[i]) * 2.0f ) );
@@ -95,42 +75,20 @@ void sigmoid_deriv(Matrix* mat, Matrix* observ){
                                     
 }
 
-void hyperbolic_tangent_deriv(Matrix* mat, Matrix* observ){
+void hyperbolic_tangent_deriv(Matrix* mat){
     for (size_t i = 0; i < mat->rows * mat->cols; i++){
         mat->values[i] = clamp(mat->values[i], -CLIP_RANGE, CLIP_RANGE);
         mat->values[i] = 1.0f - (  ( expf(mat->values[i]) - expf(-mat->values[i]) ) / powf( expf(mat->values[i]) + expf(-mat->values[i]), 2.0f) );
     }
 }
 
-void soft_plus_deriv(Matrix* mat, Matrix* observ){
+void soft_plus_deriv(Matrix* mat){
     for (size_t i = 0; i < mat->rows * mat->cols; i++){
         mat->values[i] = clamp(mat->values[i], -CLIP_RANGE, CLIP_RANGE);
         mat->values[i]  = expf(mat->values[i]) / (1.0f + expf(mat->values[i]));
     }
 }
 
-void softmax_deriv(Matrix* mat, Matrix* observ){
-    //find the predicted index (the label)
-    size_t label = 0;
-    for (size_t i = 0; i < observ->rows * observ->cols; i++){
-        if (observ->values[i] == 1.0f){
-            label = i;
-            break;
-        }
-    }
-    
-    softmax(mat);
-    float lab = mat->values[label];
-    for (size_t i = 0; i < mat->rows * mat->cols; i++){
-        if (i == label)
-            mat->values[i]  = mat->values[i] * (1.0f - mat->values[i]);
-        else
-            mat->values[i] = -mat->values[i] * lab;
-    }
-    
-    
-
-}
 
 void act_func(Matrix* mat, Activation act){
     switch (act){
@@ -146,9 +104,6 @@ void act_func(Matrix* mat, Activation act){
         case SOFT_PLUS:
             soft_plus(mat);
             return;
-        case SOFT_MAX:
-            softmax(mat);
-            return;
         case LINEAR:
             return;
         default:
@@ -157,22 +112,19 @@ void act_func(Matrix* mat, Activation act){
     }
 }
 
-void act_func_deriv(Matrix* mat, Matrix* observ, Activation act){
+void act_func_deriv(Matrix* mat, Activation act){
     switch (act){
         case RELU:
-            reLu_deriv(mat, observ);
+            reLu_deriv(mat);
             return;
         case SIGMOID:
-            sigmoid_deriv(mat, observ);
+            sigmoid_deriv(mat);
             return;
         case HYPERBOLIC_TANGENT:
-            hyperbolic_tangent_deriv(mat, observ);
+            hyperbolic_tangent_deriv(mat);
             return;
         case SOFT_PLUS:
-            soft_plus_deriv(mat, observ);
-            return;
-        case SOFT_MAX:
-            softmax_deriv(mat, observ);
+            soft_plus_deriv(mat);
             return;
         case LINEAR:
             set_values_with(mat, 1.0f);

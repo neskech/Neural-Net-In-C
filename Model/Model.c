@@ -13,8 +13,11 @@
 Model* create_model(ModelParams* params, LearningRateTuning* tuning){
     Model* m = (Model*) malloc(sizeof(Model));
     
+    //intialize random seed for parmeter intitialization and training
+    srand((unsigned int) time(0)); //cast to get rid of warning
+    
     //preallocate some space in the vectors
-    m->layerSizes = create_vector(5);
+    m->layer_sizes = create_vector(5);
     m->activations = create_vector(5);
     
     m->params = *params;
@@ -33,7 +36,7 @@ Model* load_model(const char* path){
     f = fopen(path, "r");
     if (f == NULL){
         fprintf(stderr, "ERROR: Could not open the path %s in the save_model function. Exiting...\n", path);
-        exit(-1);
+        exit(-1); 
     }
     
     Model* m = (Model*) malloc(sizeof(Model));
@@ -42,15 +45,15 @@ Model* load_model(const char* path){
     char line[100];
     
     fgets(line, 100, f);
-    offset = strlen("NumLayers: ");
-    m->numLayers = atoi(&line[offset]);
+    offset = strlen("num_layers: ");
+    m->num_layers = atoi(&line[offset]);
     
     fgets(line, 100, f);
     offset = strlen("Layer Sizes: ");
     token = strtok(line + offset, ",");
-    m->layerSizes = create_vector(3);
+    m->layer_sizes = create_vector(3);
     do {
-        push(&m->layerSizes, atoi(token));
+        push(&m->layer_sizes, atoi(token));
         token = strtok(NULL, ",");
     }while(token != NULL);
     
@@ -75,26 +78,26 @@ Model* load_model(const char* path){
     fgets(line, 100, f);
     
     //allocate the space for the weights and biases...
-    m->weights = (Matrix*) calloc(sizeof(Matrix), m->numLayers - 1);
-    m->biases = (Matrix*) calloc(sizeof(Matrix), m->numLayers - 1);
+    m->weights = (Matrix*) calloc(sizeof(Matrix), m->num_layers - 1);
+    m->biases = (Matrix*) calloc(sizeof(Matrix), m->num_layers - 1);
     
-    m->expwa_weights = (Matrix*) calloc(sizeof(Matrix), m->numLayers - 1);
-    m->expwa_biases = (Matrix*) calloc(sizeof(Matrix), m->numLayers - 1);
+    m->expwa_weights = (Matrix*) calloc(sizeof(Matrix), m->num_layers - 1);
+    m->expwa_biases = (Matrix*) calloc(sizeof(Matrix), m->num_layers - 1);
     
-    m->expwa_weights_squared = (Matrix*) calloc(sizeof(Matrix), m->numLayers - 1);
-    m->expwa_biases_squared = (Matrix*) calloc(sizeof(Matrix), m->numLayers - 1);
-    for (uint32_t i = 0; i < m->numLayers - 1; i++){
-        m->weights[i] = create_matrix(get(&m->layerSizes, i + 1), get(&m->layerSizes, i));
-        m->biases[i] = create_matrix(get(&m->layerSizes, i + 1), 1);
+    m->expwa_weights_squared = (Matrix*) calloc(sizeof(Matrix), m->num_layers - 1);
+    m->expwa_biases_squared = (Matrix*) calloc(sizeof(Matrix), m->num_layers - 1);
+    for (uint32_t i = 0; i < m->num_layers - 1; i++){
+        m->weights[i] = create_matrix(get(&m->layer_sizes, i + 1), get(&m->layer_sizes, i));
+        m->biases[i] = create_matrix(get(&m->layer_sizes, i + 1), 1);
         
-        m->expwa_weights[i] = create_matrix(get(&m->layerSizes, i + 1), get(&m->layerSizes, i));
+        m->expwa_weights[i] = create_matrix(get(&m->layer_sizes, i + 1), get(&m->layer_sizes, i));
         set_values_with(m->expwa_weights + i, 0.0f);
-        m->expwa_biases[i] = create_matrix(get(&m->layerSizes, i + 1), 1);
+        m->expwa_biases[i] = create_matrix(get(&m->layer_sizes, i + 1), 1);
         set_values_with(m->expwa_biases + i, 0.0f);
         
-        m->expwa_weights_squared[i] = create_matrix(get(&m->layerSizes, i + 1), get(&m->layerSizes, i));
+        m->expwa_weights_squared[i] = create_matrix(get(&m->layer_sizes, i + 1), get(&m->layer_sizes, i));
         set_values_with(m->expwa_weights_squared + i, 0.0f);
-        m->expwa_biases_squared[i] = create_matrix(get(&m->layerSizes, i + 1), 1);
+        m->expwa_biases_squared[i] = create_matrix(get(&m->layer_sizes, i + 1), 1);
         set_values_with(m->expwa_biases_squared + i, 0.0f);
     }
     
@@ -138,27 +141,27 @@ Model* load_model(const char* path){
     return m;
 }
 
-void save_model(Model* m, const char* path){
+uint8_t save_model(Model* m, const char* path){
     FILE* f;
     f = fopen(path, "w");
     if (f == NULL){
         fprintf(stderr, "ERROR: Could not open the path %s in the save_model function. Exiting...\n", path);
-        exit(-1);
+        return 0;
     }
     
-    fprintf(f, "NumLayers: %u\n", m->numLayers);
+    fprintf(f, "num_layers: %u\n", m->num_layers);
     fprintf(f, "Layer Sizes: ");
     
-    for (uint32_t i = 0; i < m->numLayers; i++){
-        if (i != m->numLayers - 1)
-            fprintf(f, "%d, ", get(&m->layerSizes, i));
+    for (uint32_t i = 0; i < m->num_layers; i++){
+        if (i != m->num_layers - 1)
+            fprintf(f, "%d, ", get(&m->layer_sizes, i));
         else
-            fprintf(f, "%d\n", get(&m->layerSizes, i));
+            fprintf(f, "%d\n", get(&m->layer_sizes, i));
     }
     
     fprintf(f, "Activations: ");
-    for (uint32_t i = 0; i < m->numLayers - 1; i++){
-        if (i != m->numLayers - 2)
+    for (uint32_t i = 0; i < m->num_layers - 1; i++){
+        if (i != m->num_layers - 2)
             fprintf(f, "%d, ", get(&m->activations, i));
         else
             fprintf(f, "%d\n", get(&m->activations, i));
@@ -166,7 +169,7 @@ void save_model(Model* m, const char* path){
     
     fprintf(f, "Loss Function: %d\n\n", m->loss_func);
     fprintf(f, "Weights:\n");
-    for (uint32_t i = 0; i < m->numLayers - 1; i++){
+    for (uint32_t i = 0; i < m->num_layers - 1; i++){
         fprintf(f, "[\n");
         for (size_t j  = 0; j < size(m->weights + i); j++){
             if (j != size(m->weights + i) - 1)
@@ -179,7 +182,7 @@ void save_model(Model* m, const char* path){
     fprintf(f, "\n");
     
     fprintf(f, "Biases:\n");
-    for (uint32_t i = 0; i < m->numLayers - 1; i++){
+    for (uint32_t i = 0; i < m->num_layers - 1; i++){
         fprintf(f, "[\n");
         for (size_t j  = 0; j < size(m->biases + i); j++){
             if (j != size(m->biases + i) - 1)
@@ -188,10 +191,12 @@ void save_model(Model* m, const char* path){
                 fprintf(f, "%f\n]\n", m->biases[i].values[j]);
         }
     }
+    
+    return 1;
 }
 
 void delete_model(Model* m){
-    for (size_t i = 0; i < m->numLayers - 1; i++){
+    for (size_t i = 0; i < m->num_layers - 1; i++){
         delete_matrix(m->weights + i);
         delete_matrix(m->biases + i);
 
@@ -211,15 +216,16 @@ void delete_model(Model* m){
     free(m->expwa_weights_squared);
     free(m->expwa_biases_squared);
     
-    delete_vector(&m->layerSizes);
+    delete_vector(&m->layer_sizes);
     delete_vector(&m->activations);
     
     free(m);
 }
 
 void add_layer(Model* m, int elem, Activation act){
-    push(&m->layerSizes, elem);
-    if (m->layerSizes.size != 1)
+    push(&m->layer_sizes, elem);
+    //don't add the activation of the first layer, as it doesn't have one
+    if (m->layer_sizes.size != 1)
         push(&m->activations, act);
 }
 
@@ -228,31 +234,40 @@ void set_loss_func(Model* m, Loss loss_func_){
 }
 
 uint8_t compile(Model* m){
-    m->numLayers = m->layerSizes.size;
-    if (m->numLayers <= 0)
+    m->num_layers = m->layer_sizes.size;
+    if (m->num_layers <= 0){
+        fprintf(stderr, "ERROR: Model compilation failed. You must have layers in your model!\n");
         return 0;
+    }
     
-    m->weights = (Matrix*) calloc(sizeof(Matrix), m->numLayers - 1);
-    m->biases = (Matrix*) calloc(sizeof(Matrix), m->numLayers - 1);
+    for (size_t i = 0; i < m->num_layers; i++){
+        if (get(&m->activations, i) == NONE){
+            fprintf(stderr, "ERROR: Model compilation failed. Cannot have a 'NONE' layer after the input layer\n");
+            return 0;
+        }
+    }
     
-    m->expwa_weights = (Matrix*) calloc(sizeof(Matrix), m->numLayers - 1);
-    m->expwa_biases = (Matrix*) calloc(sizeof(Matrix), m->numLayers - 1);
+    m->weights = (Matrix*) calloc(sizeof(Matrix), m->num_layers - 1);
+    m->biases = (Matrix*) calloc(sizeof(Matrix), m->num_layers - 1);
     
-    m->expwa_weights_squared = (Matrix*) calloc(sizeof(Matrix), m->numLayers - 1);
-    m->expwa_biases_squared = (Matrix*) calloc(sizeof(Matrix), m->numLayers - 1);
+    m->expwa_weights = (Matrix*) calloc(sizeof(Matrix), m->num_layers - 1);
+    m->expwa_biases = (Matrix*) calloc(sizeof(Matrix), m->num_layers - 1);
     
-    for (size_t i = 0; i < m->numLayers - 1; i++){
-        m->weights[i] = create_matrix(get(&m->layerSizes, i + 1), get(&m->layerSizes, i));
-        m->biases[i] = create_matrix(get(&m->layerSizes, i + 1), 1);
+    m->expwa_weights_squared = (Matrix*) calloc(sizeof(Matrix), m->num_layers - 1);
+    m->expwa_biases_squared = (Matrix*) calloc(sizeof(Matrix), m->num_layers - 1);
+    
+    for (size_t i = 0; i < m->num_layers - 1; i++){
+        m->weights[i] = create_matrix(get(&m->layer_sizes, i + 1), get(&m->layer_sizes, i));
+        m->biases[i] = create_matrix(get(&m->layer_sizes, i + 1), 1);
         
-        m->expwa_weights[i] = create_matrix(get(&m->layerSizes, i + 1), get(&m->layerSizes, i));
+        m->expwa_weights[i] = create_matrix(get(&m->layer_sizes, i + 1), get(&m->layer_sizes, i));
         set_values_with(m->expwa_weights + i, 0.0f);
-        m->expwa_biases[i] = create_matrix(get(&m->layerSizes, i + 1), 1);
+        m->expwa_biases[i] = create_matrix(get(&m->layer_sizes, i + 1), 1);
         set_values_with(m->expwa_biases + i, 0.0f);
         
-        m->expwa_weights_squared[i] = create_matrix(get(&m->layerSizes, i + 1), get(&m->layerSizes, i));
+        m->expwa_weights_squared[i] = create_matrix(get(&m->layer_sizes, i + 1), get(&m->layer_sizes, i));
         set_values_with(m->expwa_weights_squared + i, 0.0f);
-        m->expwa_biases_squared[i] = create_matrix(get(&m->layerSizes, i + 1), 1);
+        m->expwa_biases_squared[i] = create_matrix(get(&m->layer_sizes, i + 1), 1);
         set_values_with(m->expwa_biases_squared + i, 0.0f);
     }
     
@@ -260,34 +275,32 @@ uint8_t compile(Model* m){
 }
 
 void init_weights_and_biases(Model* m, float mean, float standard_dev){
-    for (size_t i = 0; i < m->numLayers - 1; i++){
-        //Box–Muller transform for generating numbers on a guassian distribution
-        
-        srand((unsigned int) time(0)); //cast to get rid of warning
+    for (size_t i = 0; i < m->num_layers - 1; i++){
         
         float val;
+        //Box–Muller transform for generating numbers on a guassian distribution
         for (size_t r = 0; r < (m->weights + i)->rows * (m->weights + i)->cols; r++){
             val = rand() / (float)RAND_MAX;
             
             if (r % 2 == 0)
-                val = sqrtf(-2.0f * log(val)) * cos(2.0f * M_PI * val);
+                val = sqrtf(-2.0f * logf(val)) * cosf(2.0f * M_PI * val);
             else
-                val = sqrtf(-2.0f * log(val)) * sin(2.0f * M_PI * val);
+                val = sqrtf(-2.0f * logf(val)) * sinf(2.0f * M_PI * val);
             
             val = val * standard_dev + mean;
-            *((m->weights + i)->values + r) = val;
+            m->weights[i].values[r] = val;
         }
         
         for (size_t r = 0; r < (m->biases + i)->rows; r++){
             val = rand() / (float)RAND_MAX;
             
             if (r % 2 == 0)
-                val = sqrtf(-2.0f * log(val)) * cos(2.0f * M_PI * val);
+                val = sqrtf(-2.0f * logf(val)) * cosf(2.0f * M_PI * val);
             else
-                val = sqrtf(-2.0f * log(val)) * sin(2.0f * M_PI * val);
+                val = sqrtf(-2.0f * logf(val)) * sinf(2.0f * M_PI * val);
             
             val = val * standard_dev + mean;
-            *((m->biases + i)->values + r) = val;
+            m->biases[i].values[r] = val;
         }
             
        
@@ -295,32 +308,29 @@ void init_weights_and_biases(Model* m, float mean, float standard_dev){
 }
 
 Matrix eval(Model* m, Matrix* x){
-    //the input x is cleaned up by this function, no need to delete it from the outside
+    //running matrix will propogate through the layers. Make a copy of x so it isn't deleted
     Matrix running = matrix_copy(x);
     
-    
-    for (size_t i = 0; i < m->numLayers - 1; i++){
-
-            
+    for (size_t i = 0; i < m->num_layers - 1; i++){
         //when we copy a new value to running, the previous value's memory is lost. Be sure to delete it
         Matrix before = running;
         running = mult(m->weights + i, &running);
         delete_matrix(&before);
         
+        //add the biases
         add_in_place(&running, m->biases + i);
-        
+        //apply the activation function
         act_func(&running, get(&m->activations, i));
         
     }
     
-    return running;
+    return running; //will have to clean up the return value...
 }
-
 
 
 float loss_on_dataset(Model* m, Matrix* x, Matrix* y, uint32_t num_data_points){
     float summed_loss = 0.0f;
-    for (uint32_t i = 0; i < num_data_points; i++){
+    for (size_t i = 0; i < num_data_points; i++){
         Matrix eval_ = eval(m, x + i);
         summed_loss += loss_func(&eval_, y + i, m->loss_func);
         delete_matrix(&eval_);
@@ -328,13 +338,9 @@ float loss_on_dataset(Model* m, Matrix* x, Matrix* y, uint32_t num_data_points){
     return summed_loss / num_data_points;
 }
 
-
-
-
-
 static size_t total_params(Model* m){
     size_t total_params = 0;
-    for (size_t i = 0; i < m->numLayers - 1; i++){
+    for (size_t i = 0; i < m->num_layers - 1; i++){
         total_params += size(m->weights + i);
         total_params += size(m->biases + i);
     }
@@ -344,9 +350,9 @@ static size_t total_params(Model* m){
 void summary(Model* m, uint8_t print_matrices){
     //Print Layer Sizes
     printf("Layer Sizes: ");
-    for (size_t i = 0; i < m->numLayers; i++){
-        printf("%d", get(&m->layerSizes, i));
-        if (i != m->numLayers - 1)
+    for (size_t i = 0; i < m->num_layers; i++){
+        printf("%d", get(&m->layer_sizes, i));
+        if (i != m->num_layers - 1)
             printf(", ");
     }
     
@@ -354,9 +360,9 @@ void summary(Model* m, uint8_t print_matrices){
     const char* loss_names[2] = { "least squares", "cross entropy" };
     
     printf("\n------------------------------------------\nActivation Functions: ");
-    for (size_t i = 0; i < m->numLayers - 1; i++){
+    for (size_t i = 0; i < m->num_layers - 1; i++){
         printf("%s", act_names[ get(&m->activations, i) ] );
-        if (i != m->numLayers - 1)
+        if (i != m->num_layers - 1)
             printf(", ");
     }
     
@@ -368,13 +374,13 @@ void summary(Model* m, uint8_t print_matrices){
         
         
             printf("------------------------------------------\nWeights:\n\n");
-            for (size_t i = 0; i < m->numLayers - 1; i++){
+            for (size_t i = 0; i < m->num_layers - 1; i++){
                 print_matrix(m->weights + i);
                 printf("\n");
             }
             
             printf("------------------------------------------\nBiases:\n\n");
-            for (size_t i = 0; i < m->numLayers - 1; i++){
+            for (size_t i = 0; i < m->num_layers - 1; i++){
                 print_matrix(m->biases + i);
                 printf("\n");
             }

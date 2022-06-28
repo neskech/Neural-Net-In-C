@@ -34,6 +34,10 @@ void set_values_with(Matrix* mat, float val){
     }
 }
 
+void delete_matrix(Matrix* mat){
+    free(mat->values);
+}
+
 void move_matrix(Matrix* from, Matrix* to){
     if (to->values != NULL)
         free(to->values);
@@ -43,6 +47,33 @@ void move_matrix(Matrix* from, Matrix* to){
     to->cols = from->cols;
     from->values = NULL;
 }
+
+Matrix matrix_copy(Matrix* mat){
+    Matrix m = create_matrix(mat->rows, mat->cols);
+    
+    memcpy(m.values, mat->values, mat->rows * mat->cols * sizeof(float));
+    return m;
+}
+
+
+
+
+
+Matrix transpose(Matrix* mat){
+    Matrix trans = create_matrix(mat->cols, mat->rows);
+    
+    for (size_t r = 0; r < mat->rows; ++r){
+        for (size_t c = 0; c < mat->cols; ++c){
+            uint16_t index_1 = r * mat->cols + c;
+            uint16_t index_2 = c * mat->rows + r;
+            trans.values[index_2] = mat->values[index_1];
+        }
+    }
+    
+    delete_matrix(mat);
+    return trans;
+}
+
 
 
 
@@ -106,7 +137,6 @@ Matrix mult(Matrix* mat_one, Matrix* mat_two){
     
 }
 
-
 Matrix add(Matrix* mat_one, Matrix* mat_two){
     if (mat_one->rows != mat_two->rows && mat_one->cols != mat_two->cols)
         return create_matrix(0, 0);
@@ -135,25 +165,14 @@ Matrix sub(Matrix* mat_one, Matrix* mat_two){
     return new_mat;
 }
 
-float magnitude(Matrix* mat){
-    float mag = 0.0f;
-    for (size_t r = 0; r < mat->rows; ++r){
-        for (size_t c = 0; c < mat->cols; ++c){
-            uint16_t index = r * mat->cols + c;
-            mag += mat->values[index] * mat->values[index];
-        }
-    }
-    return mag;
-}
 
-void reciprocal(Matrix* mat){
-    for (size_t r = 0; r < mat->rows; ++r){
-        for (size_t c = 0; c < mat->cols; ++c){
-            uint16_t index = r * mat->cols + c;
-            mat->values[index] = 1.0f / mat->values[index];
-        }
-    }
-}
+
+
+
+
+
+
+
 
 void dot_in_place(Matrix* mat_one, Matrix* mat_two){
     if (mat_one->rows != mat_two->rows && mat_one->cols != mat_two->cols){
@@ -180,7 +199,6 @@ void div_in_place(Matrix* mat_one, Matrix* mat_two){
         }
     }
 }
-
 
 void add_in_place(Matrix* mat_one, Matrix* mat_two){
     if (mat_one->rows != mat_two->rows && mat_one->cols != mat_two->cols){
@@ -210,6 +228,13 @@ void sub_in_place(Matrix* mat_one, Matrix* mat_two){
     }
 }
 
+
+
+
+
+
+
+
 void scalar_mult(Matrix* mat, float scalar){
     for (size_t r = 0; r < mat->rows; ++r){
         for (size_t c = 0; c < mat->cols; ++c){
@@ -237,6 +262,14 @@ void scalar_add(Matrix* mat, float scalar){
     }
 }
 
+
+
+
+
+
+
+
+
 void matrix_square(Matrix* mat){
     for (size_t r = 0; r < mat->rows; ++r){
         for (size_t c = 0; c < mat->cols; ++c){
@@ -255,54 +288,30 @@ void matrix_sqrt(Matrix* mat){
     }
 }
 
-void matrix_for_each(Matrix* mat, float (*func)(float)){
+float magnitude(Matrix* mat){
+    float mag = 0.0f;
     for (size_t r = 0; r < mat->rows; ++r){
         for (size_t c = 0; c < mat->cols; ++c){
             uint16_t index = r * mat->cols + c;
-            mat->values[index] = func(mat->values[index]);
+            mag += mat->values[index] * mat->values[index];
         }
     }
+    return mag;
 }
 
-Matrix transpose(Matrix* mat){
-    Matrix trans = create_matrix(mat->cols, mat->rows);
-    
+void reciprocal(Matrix* mat){
     for (size_t r = 0; r < mat->rows; ++r){
         for (size_t c = 0; c < mat->cols; ++c){
-            uint16_t index_1 = r * mat->cols + c;
-            uint16_t index_2 = c * mat->rows + r;
-            trans.values[index_2] = mat->values[index_1];
+            uint16_t index = r * mat->cols + c;
+            mat->values[index] = 1.0f / mat->values[index];
         }
     }
-    
-    delete_matrix(mat);
-    return trans;
 }
 
-Matrix transpose_copy(Matrix* mat){
-    Matrix trans = create_matrix(mat->cols, mat->rows);
-    
-    for (size_t r = 0; r < mat->rows; ++r){
-        for (size_t c = 0; c < mat->cols; ++c){
-            uint16_t index_1 = r * mat->cols + c;
-            uint16_t index_2 = c * mat->rows + r;
-            trans.values[index_2] = mat->values[index_1];
-        }
-    }
-    
-    return trans;
-}
 
-Matrix matrix_copy(Matrix* mat){
-    Matrix m = create_matrix(mat->rows, mat->cols);
-    
-    memcpy(m.values, mat->values, mat->rows * mat->cols * sizeof(float));
-    return m;
-}
 
-void delete_matrix(Matrix* mat){
-    free(mat->values);
-}
+
+
 
 size_t size(Matrix* mat){ return mat->rows * mat->cols; }
 

@@ -14,18 +14,6 @@
 #include "Matrix.h"
 #include "Vector.h"
 
-typedef struct Gradients{
-    Matrix* weights;
-    Matrix* biases;
-} Gradients;
-
-typedef struct ForwardPassCache{
-    Matrix* activations; //array of activations
-    Matrix* outputs;
-} ForwardPassCache;
-
-
-
 typedef struct ModelParams{
     float learning_rate;
     uint32_t batch_size;
@@ -45,8 +33,8 @@ typedef struct LearningRateTuning{
 
 
 typedef struct Model{
-    uint8_t numLayers; //never going to exceed more than 255 layers (hopefully)
-    Vector layerSizes;
+    uint8_t num_layers; //never going to exceed more than 255 layers (hopefully)
+    Vector layer_sizes;
     Vector activations;
     
     Matrix* weights;
@@ -72,7 +60,7 @@ Model* create_model(ModelParams* params, LearningRateTuning* tuning);
 
 Model* load_model(const char* path);
 
-void save_model(Model* m, const char* path);
+uint8_t save_model(Model* m, const char* path);
 
 void delete_model(Model* model);
 
@@ -80,13 +68,16 @@ void delete_model(Model* model);
 
 float loss_on_dataset(Model* m, Matrix* x, Matrix* y, uint32_t num_data_points);
 
+float accuracy_on_dataset(Model* m, Matrix* x, Matrix* y, uint32_t num_data_points);
+
 void add_layer(Model* m, int elem, Activation act);
 
 void set_loss_func(Model* m, Loss loss_func_);
 
-void init_weights_and_biases(Model* m, float mean, float standard_deviation);
+void init_weights_and_biases(Model* m, float mean, float standard_deviation); //to be used after compile...
 
 uint8_t compile(Model* m);
+
 
 
 Matrix eval(Model* m, Matrix* x);
