@@ -391,7 +391,7 @@ uint8_t train(Model* m, Matrix* inputs, Matrix* observ, uint32_t num_data_points
             if (m->params.verbose >= 2){
                 printf(", Gradient Magnitude: %f", gradient_mag);
                 if (m->params.verbose == 3)
-                    printf(", Average time per epoch: %f\n, ", cumulative_time / i);
+                    printf(", Average time per epoch: %fs\n, ", cumulative_time / i);
                 else
                     printf("\n");
             }
