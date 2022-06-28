@@ -5,8 +5,8 @@
 //  Created by Shaunte Mellor on 6/22/22.
 //
 
-#include "Loss.h"
-#include <math.h>
+#include "Model/Loss.h"
+#include "pch.h"
 
 float least_squares(Matrix* pred, Matrix* observ){
     float sum = 0.0f;

@@ -5,11 +5,8 @@
 //  Created by Shaunte Mellor on 5/1/22.
 //
 
-#include "Matrix.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
+#include "Model/Matrix.h"
+#include "pch.h"
 
 //returning by value simply copys the address of the pointer, so no memory leak
 Matrix create_matrix(uint16_t rows, uint16_t cols){
@@ -81,8 +78,10 @@ Matrix transpose(Matrix* mat){
 
 
 Matrix dot(Matrix* mat_one, Matrix* mat_two){
-    if (mat_one->rows != mat_two->rows && mat_one->cols != mat_two->cols)
+    if (mat_one->rows != mat_two->rows && mat_one->cols != mat_two->cols){
+        fprintf(stderr, "ERROR: Matrix dimensions unfit for element wise multiplication. Returning...");
         return create_matrix(0, 0);
+    }
     
     Matrix new_mat = create_matrix(mat_one->rows, mat_one->cols);
     
@@ -97,7 +96,7 @@ Matrix dot(Matrix* mat_one, Matrix* mat_two){
 
 Matrix matrix_div(Matrix* mat_one, Matrix* mat_two){
     if (mat_one->rows != mat_two->rows && mat_one->cols != mat_two->cols){
-        printf("ERROR: Matrix dimensions unfit for element wise division. Returning 0-sized matrix...");
+        fprintf(stderr, "ERROR: Matrix dimensions unfit for element wise division. Returning 0-sized matrix...");
         return create_matrix(0, 0);
     }
     
@@ -114,7 +113,7 @@ Matrix matrix_div(Matrix* mat_one, Matrix* mat_two){
 
 Matrix mult(Matrix* mat_one, Matrix* mat_two){
     if (mat_one->cols != mat_two->rows){
-        printf("ERROR: Matrix dimensions unfit for multiplication. Returning 0-sized matrix...");
+        fprintf(stderr, "ERROR: Matrix dimensions unfit for multiplication. Returning 0-sized matrix...");
         return create_matrix(0, 0);
     }
     
@@ -138,8 +137,10 @@ Matrix mult(Matrix* mat_one, Matrix* mat_two){
 }
 
 Matrix add(Matrix* mat_one, Matrix* mat_two){
-    if (mat_one->rows != mat_two->rows && mat_one->cols != mat_two->cols)
+    if (mat_one->rows != mat_two->rows && mat_one->cols != mat_two->cols){
+        fprintf(stderr, "ERROR: Matrix dimensions unfit for addition. Returning...");
         return create_matrix(0, 0);
+    }
     
     Matrix new_mat = create_matrix(mat_one->rows, mat_one->cols);
     for (size_t r = 0; r < mat_one->rows; ++r){
@@ -152,8 +153,10 @@ Matrix add(Matrix* mat_one, Matrix* mat_two){
 }
 
 Matrix sub(Matrix* mat_one, Matrix* mat_two){
-    if (mat_one->rows != mat_two->rows && mat_one->cols != mat_two->cols)
+    if (mat_one->rows != mat_two->rows && mat_one->cols != mat_two->cols){
+        fprintf(stderr, "ERROR: Matrix dimensions unfit for subtraction. Returning...");
         return create_matrix(0, 0);
+    }
     
     Matrix new_mat = create_matrix(mat_one->rows, mat_one->cols);
     for (size_t r = 0; r < mat_one->rows; ++r){
@@ -176,7 +179,7 @@ Matrix sub(Matrix* mat_one, Matrix* mat_two){
 
 void dot_in_place(Matrix* mat_one, Matrix* mat_two){
     if (mat_one->rows != mat_two->rows && mat_one->cols != mat_two->cols){
-        printf("ERROR: Matrix dimensions unfit for element wise multiplication (in place). Returning...");
+        fprintf(stderr, "ERROR: Matrix dimensions unfit for element wise multiplication (in place). Returning...");
         return;
     };
     for (size_t r = 0; r < mat_one->rows; ++r){
@@ -189,7 +192,7 @@ void dot_in_place(Matrix* mat_one, Matrix* mat_two){
 
 void div_in_place(Matrix* mat_one, Matrix* mat_two){
     if (mat_one->rows != mat_two->rows && mat_one->cols != mat_two->cols){
-        printf("ERROR: Matrix dimensions unfit for element wise multiplication (in place). Returning...");
+        fprintf(stderr, "ERROR: Matrix dimensions unfit for element wise multiplication (in place). Returning...");
         return;
     };
     for (size_t r = 0; r < mat_one->rows; ++r){
@@ -202,7 +205,7 @@ void div_in_place(Matrix* mat_one, Matrix* mat_two){
 
 void add_in_place(Matrix* mat_one, Matrix* mat_two){
     if (mat_one->rows != mat_two->rows && mat_one->cols != mat_two->cols){
-        printf("ERROR: Matrix dimensions unfit for addition (in place). Returning...");
+        fprintf(stderr, "ERROR: Matrix dimensions unfit for addition (in place). Returning...");
         return;
     }
     
@@ -216,7 +219,7 @@ void add_in_place(Matrix* mat_one, Matrix* mat_two){
 
 void sub_in_place(Matrix* mat_one, Matrix* mat_two){
     if (mat_one->rows != mat_two->rows && mat_one->cols != mat_two->cols){
-        printf("ERROR: Matrix dimensions unfit for subtraction (in place). Returning...");
+        fprintf(stderr, "ERROR: Matrix dimensions unfit for subtraction (in place). Returning...");
         return;
     }
     

@@ -5,9 +5,10 @@
 //  Created by Shaunte Mellor on 5/1/22.
 //
 
-#include "Activations.h"
-#include <stdio.h>
-#include <math.h>
+#include "Model/Matrix.h"
+#include "Model/Activations.h"
+#include "pch.h"
+
 
 #define CLIP_RANGE 15
 

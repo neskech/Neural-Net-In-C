@@ -7,9 +7,8 @@
 //
 
 #include "Vector.h"
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
+#include "pch.h"
+
 
 //can return by value, as the address of the pointer to the inner array is copied, and as such, not lost
 Vector create_vector(size_t capacity){

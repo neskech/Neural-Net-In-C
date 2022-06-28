@@ -5,10 +5,8 @@
 //  Created by Shaunte Mellor on 5/2/22.
 //
 
-#include "Model.h"
-#include <math.h>
-#include <time.h>
-#include <string.h>
+#include "Model/Model.h"
+#include "pch.h"
 
 Model* create_model(ModelParams* params, LearningRateTuning* tuning){
     Model* m = (Model*) malloc(sizeof(Model));

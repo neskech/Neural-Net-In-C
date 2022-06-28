@@ -8,8 +8,7 @@
 #ifndef Loss_h
 #define Loss_h
 
-#include <stdio.h>
-#include "Matrix.h"
+#include "Model/Matrix.h"
 
 typedef enum Loss{
     LEAST_SQUARES

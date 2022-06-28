@@ -8,8 +8,6 @@
 #ifndef Vector_h
 #define Vector_h
 
-#include <stdio.h>
-
 
 typedef struct Vector{
     int* elements;

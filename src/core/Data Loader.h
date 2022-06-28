@@ -8,9 +8,9 @@
 #ifndef Data_Loader_h
 #define Data_Loader_h
 
-#include <stdio.h>
-#include "Vector.h"
-#include "Matrix.h"
+#include "pch.h"
+#include "Data Structure/Vector.h"
+#include "Model/Matrix.h"
 
 typedef struct Data{
     uint32_t num_data_points;

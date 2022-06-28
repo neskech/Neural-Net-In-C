@@ -5,11 +5,8 @@
 //  Created by Shaunte Mellor on 6/25/22.
 //
 
-#include "Training.h"
-#include <time.h>
-#include <math.h>
-#include <string.h>
-#include <pthread.h>
+#include "Model/Training.h"
+#include "pch.h"
 
 
 typedef struct Gradients{
@@ -167,15 +164,14 @@ static void back_prop(Model* m, Matrix* observ, ForwardPassCache* cache, Gradien
         
         //Continue on with the chain rule by multiplying the weights transpose by the running_deriv
         if (i != 0){
-            Matrix trans_weights = transpose(m->weights + i);
+            m->weights[i] = transpose(m->weights + i);
             
             //since matrix multiplication creates a new matrix, we must delete the previous value of
             //running_deriv to prevent a memory leak...
             Matrix before = running_deriv;
-            running_deriv = mult(&trans_weights, &running_deriv);
+            running_deriv = mult(m->weights + i, &running_deriv);
             delete_matrix(&before);
             
-            delete_matrix(&trans_weights);
             m->weights[i] = transpose(m->weights + i); //undo transpose
         }
     }

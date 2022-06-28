@@ -7,7 +7,7 @@
 
 #ifndef Activations_h
 #define Activations_h
-#include "Matrix.h"
+#include "Model/Matrix.h"
 
 #define MAX(x, y) x > y ? x : y
 #define MIN(x, y) x < y ? x : y

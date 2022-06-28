@@ -5,14 +5,12 @@
 //  Created by Shaunte Mellor on 6/23/22.
 //
 
-#include "Data Loader.h"
-#include <stdio.h>
-#include <string.h>
-#include <time.h>
+#include "core/Data Loader.h"
+#include "pch.h"
+
 
 #define CHAR_BUFF_SIZE 8000
 
-#define MIN(x, y) x < y ? x : y
 
 
 uint32_t num_datapoints_of_csv(const char* path){

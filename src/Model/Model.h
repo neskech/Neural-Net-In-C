@@ -8,11 +8,11 @@
 #ifndef Model_h
 #define Model_h
 
-#include <stdlib.h>
-#include "Activations.h"
-#include "Loss.h"
-#include "Matrix.h"
-#include "Vector.h"
+#include "pch.h"
+#include "Model/Activations.h"
+#include "Model/Loss.h"
+#include "Model/Matrix.h"
+#include "Data Structure/Vector.h"
 
 typedef struct ModelParams{
     float learning_rate;
