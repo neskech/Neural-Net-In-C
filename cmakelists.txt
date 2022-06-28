@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(neural_net)
+project(main)
 
 set(CMAKE_CXX_STANDARD 23)
 
@@ -10,7 +10,7 @@ elseif (CMAKE_BUILD_TYPE MATCHES Debug)
 endif ()
 
 file(GLOB_RECURSE file_sources src/*.c)
-add_executable(neural_net ${file_sources})
+add_executable(main ${file_sources})
 include_directories(src)
 
-target_precompile_headers(neural_net PRIVATE src/pch.h)
+target_precompile_headers(main PRIVATE src/pch.h)
