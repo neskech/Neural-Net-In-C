@@ -47,6 +47,19 @@ void soft_plus(Matrix* mat){
     }
 }
 
+void softmax(Matrix* mat){
+    float denom = 0.0f;
+    for (size_t i = 0; i < mat->rows * mat->cols; i++){
+        //storing the e^x so we don't have to recalculate it
+        float val = exp(mat->values[i]);
+        denom += val;
+        mat->values[i] = val;
+    }
+    for (size_t i = 0; i < mat->rows * mat->cols; i++){
+        mat->values[i] /= denom;
+    }
+}
+
 
 uint32_t argmax(Matrix* mat){
     float max = mat->values[0];
@@ -60,6 +73,7 @@ uint32_t argmax(Matrix* mat){
     return max_dex;
 }
 
+//TODO format these the same as loss file
 
 void reLu_deriv(Matrix* mat){
     for (size_t i = 0; i < mat->rows * mat->cols; i++){
@@ -90,6 +104,24 @@ void soft_plus_deriv(Matrix* mat){
     }
 }
 
+void softmax_deriv(Matrix* mat, Matrix* observ){
+    size_t j;
+    for (size_t i = 0; i < mat->rows * mat->cols; i++){
+        if (observ->values[i] == 1.0f){
+            j = i;
+            break;
+        }
+    }
+
+    float targ = mat->values[j];
+    for (size_t i = 0; i < mat->rows * mat->cols; i++){
+        if (i == j)
+            mat->values[i] = targ * (1.0f - targ);
+        else
+            mat->values[i] *= -targ;
+    }
+}
+
 
 void act_func(Matrix* mat, Activation act){
     switch (act){
@@ -105,6 +137,9 @@ void act_func(Matrix* mat, Activation act){
         case SOFT_PLUS:
             soft_plus(mat);
             return;
+        case SOFT_MAX:
+            softmax(mat);
+            return;
         case LINEAR:
             return;
         default:
@@ -113,7 +148,7 @@ void act_func(Matrix* mat, Activation act){
     }
 }
 
-void act_func_deriv(Matrix* mat, Activation act){
+void act_func_deriv(Matrix* mat, Activation act, Matrix* observ){
     switch (act){
         case RELU:
             reLu_deriv(mat);
@@ -126,6 +161,9 @@ void act_func_deriv(Matrix* mat, Activation act){
             return;
         case SOFT_PLUS:
             soft_plus_deriv(mat);
+            return;
+        case SOFT_MAX:
+            softmax_deriv(mat, observ);
             return;
         case LINEAR:
             set_values_with(mat, 1.0f);

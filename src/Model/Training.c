@@ -148,7 +148,7 @@ static void back_prop(Model* m, Matrix* observ, ForwardPassCache* cache, Gradien
 
         //Get the activation functions derivative...
         Activation act = get(&m->activations, i);
-        act_func_deriv(cache->outputs + i, act); //Stores the derivative in outputs[i]
+        act_func_deriv(cache->outputs + i, act, observ); //Stores the derivative in outputs[i]
         
         //element-wise-multiply the activation derivatives by running_deriv...
         dot_in_place(&running_deriv, cache->outputs + i);

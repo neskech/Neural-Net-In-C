@@ -17,6 +17,7 @@ typedef enum Activation{
     SIGMOID,
     HYPERBOLIC_TANGENT,
     SOFT_PLUS,
+    SOFT_MAX,
     LINEAR,
     NONE,
 } Activation;
@@ -44,13 +45,13 @@ void hyperbolic_tangent_deriv(Matrix* mat);
 
 void soft_plus_deriv(Matrix* mat);
 
-void softmax_deriv(Matrix* mat);
+void softmax_deriv(Matrix* mat, Matrix* observ);
 
 
 
 void act_func(Matrix* mat, Activation act);
 
-void act_func_deriv(Matrix* mat, Activation act);
+void act_func_deriv(Matrix* mat, Activation act, Matrix* observ);
 
 
 #endif /* Activations_h */
