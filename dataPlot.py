@@ -20,7 +20,7 @@ def display(data, data_type):
     py.show()
 
 def main():
-    data_type = "gradient magnitude"
+    data_type = "loss"
     data = read_json_data("./training data/example.json", data_type)
     display(data, data_type)
 

@@ -9,29 +9,31 @@
 #include "Model/Model.h"
 #include "Model/Training.h"
 #include "core/Data Loader.h"
+#include "Contracts.h"
 
 DataSplit get_data(const char* path){
     
     uint32_t num_data_points = num_datapoints_of_csv(path);
     uint32_t num_features = num_features_of_csv(path);
     
-    //the paremeter after num_features
+    //2nd to last param --> The column of the target feature in the csv
+    //last param --> the number of output classes (for something like mnist we would have 10)
     Data m_data = read_csv(path, num_data_points, num_features, 1, 1);
     
-    float train_percent = 0.80f;
+    float train_percent = 0.90f;
     uint32_t train_size = (uint32_t) (train_percent * num_data_points);
     DataSplit split = train_test_split(&m_data, train_size);
-
+    
     return split; //pointers are copied, so no memory leak
 }
 
 Model* get_model(void){
     ModelParams params = {
-        .learning_rate = 0.01f,
-        .batch_size = 2,
+        .learning_rate = 0.05f,
+        .batch_size = 5,
         .verbose = 3,
         .momentum = 0.9f,
-        .momentum2 = 0.999f,
+        .momentum2 = 0.99f,
         .epsillon = 1e-8,
     };
     
@@ -44,9 +46,9 @@ Model* get_model(void){
     //params: Model*, size of layer, activation function
     //first layer has no activation, so pass 'NONE'
     add_layer(m, 1, NONE);
-    add_layer(m, 10, HYPERBOLIC_TANGENT);
-    add_layer(m, 10, HYPERBOLIC_TANGENT);
-    add_layer(m, 1, HYPERBOLIC_TANGENT);
+    add_layer(m, 20, LEAKY_RELU);
+    add_layer(m, 20, LEAKY_RELU);
+    add_layer(m, 1, LINEAR);
    
     set_loss_func(m, LEAST_SQUARES);
     
@@ -67,11 +69,11 @@ Model* get_model(void){
 
 
 int main(int argc, const char* argv[]) {
-    //workspace directory is only one path out...
     Model* model = get_model();
+    //dataset that models f(x) = x^2
     DataSplit split = get_data("../data/test.csv");
 
-    uint32_t epochs = 200;
+    uint32_t epochs = 2000;
     const char* training_data_file_ = "../training data/example.json";
     uint8_t success = train(model, split.train.inputs, split.train.outputs, split.train.num_data_points, epochs, training_data_file_);
 
@@ -80,7 +82,18 @@ int main(int argc, const char* argv[]) {
          save_model(model, "../saved models/example.txt");
 
     float loss = loss_on_dataset(model, split.test.inputs, split.test.outputs, split.test.num_data_points);
-    printf("Loss on test set: %f\n", loss);
+    float accuracy = accuracy_on_dataset(model, split.test.inputs, split.test.outputs, split.test.num_data_points);
+    printf("\n\nLoss on test set: %f\n", loss);
+
+    for (int i = 0; i <= 10; i++){
+        float* alloc = malloc(sizeof(float));
+        *alloc = i;
+        Matrix input = create_matrix_from_values(1, 1, alloc);
+        Matrix output = eval(model, &input);
+        printf("Output %f for input %f\n", output.values[0], input.values[0]);
+        delete_matrix(&input); //deletes alloc as well
+        delete_matrix(&output);
+    }
 
     //cleanup...
     delete_split_data(&split);

@@ -52,10 +52,6 @@ Matrix matrix_copy(Matrix* mat){
     return m;
 }
 
-
-
-
-
 Matrix transpose(Matrix* mat){
     Matrix trans = create_matrix(mat->cols, mat->rows);
     
@@ -71,15 +67,10 @@ Matrix transpose(Matrix* mat){
     return trans;
 }
 
-
-
-
-
-
-
 Matrix dot(Matrix* mat_one, Matrix* mat_two){
     if (mat_one->rows != mat_two->rows && mat_one->cols != mat_two->cols){
-        fprintf(stderr, "ERROR: Matrix dimensions unfit for element wise multiplication. Returning...");
+        fprintf(stderr, "ERROR: Matrix dimensions of (%d x %d) and (%d x %d) unfit for element wise multiplication. Returning...",
+        mat_one->rows, mat_one->cols, mat_two->rows, mat_two->cols);
         return create_matrix(0, 0);
     }
     
@@ -114,7 +105,7 @@ Matrix matrix_div(Matrix* mat_one, Matrix* mat_two){
 Matrix mult(Matrix* mat_one, Matrix* mat_two){
     if (mat_one->cols != mat_two->rows){
         fprintf(stderr, "ERROR: Matrix dimensions unfit for multiplication. Returning 0-sized matrix...");
-        return create_matrix(0, 0);
+        exit(-1);
     }
     
     Matrix new_mat = create_matrix(mat_one->rows, mat_two->cols);

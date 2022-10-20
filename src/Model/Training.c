@@ -177,6 +177,20 @@ static void back_prop(Model* m, Matrix* observ, ForwardPassCache* cache, Gradien
     }
 }
 
+static void apply_gradients2(Model* m, Gradients* grads, float* gradient_mag, uint32_t time_step){
+    for (size_t i = 0; i < m->num_layers - 1; i++){
+        scalar_mult(grads->weights + i, m->params.learning_rate);
+        scalar_mult(grads->biases + i, m->params.learning_rate);
+
+        sub_in_place(m->weights + i, grads->weights + i);
+        sub_in_place(m->biases + i, grads->biases + i);
+        
+        if (gradient_mag != NULL){
+            *gradient_mag += magnitude(grads->weights + i);
+            *gradient_mag += magnitude(grads->biases + i);
+        }
+    }
+}
 
 static void apply_gradients(Model* m, Gradients* grads, float* gradient_mag, uint32_t time_step){
     for (size_t i = 0; i < m->num_layers - 1; i++){
@@ -330,6 +344,7 @@ static void perform_epoch(Model* m, Matrix* inputs, Matrix* observ, uint32_t num
     }
     
     //randomize the order of the dataset
+    //TODO make this only a small portion of the dataset
     Vector indices = randomize_dataset(num_data_points);
     //data offset to be used by the retrieve_gradients() function
     uint32_t offset = 0;
@@ -376,6 +391,7 @@ uint8_t train(Model* m, Matrix* inputs, Matrix* observ, uint32_t num_data_points
     for (uint32_t i = 0; i < num_epochs; i++){
         
         float curr_loss = 0.0f;
+        gradient_mag = 0.0f; //reset the gradient magnitude each iteration
         float* grad_p = m->params.verbose == 2 || write_to_file ? &gradient_mag : NULL;
         float* loss_p = m->params.verbose >= 1 || m->use_tuning || write_to_file ? &curr_loss : NULL;
         

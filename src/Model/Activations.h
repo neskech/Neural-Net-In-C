@@ -14,6 +14,7 @@
 
 typedef enum Activation{
     RELU = 0,
+    LEAKY_RELU,
     SIGMOID,
     HYPERBOLIC_TANGENT,
     SOFT_PLUS,
@@ -24,6 +25,8 @@ typedef enum Activation{
 
 
 void reLu(Matrix* mat);
+
+void leaky_reLu(Matrix* mat);
 
 void sigmoid(Matrix* mat);
 
@@ -38,6 +41,8 @@ uint32_t argmax(Matrix* mat);
 
 
 void reLu_deriv(Matrix* mat);
+
+void leaky_reLu_deriv(Matrix* mat);
 
 void sigmoid_deriv(Matrix* mat);
 

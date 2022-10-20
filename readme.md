@@ -14,7 +14,7 @@ git clone --recursive https://github.com/neskech/ANN-in-C.git
 ```
 - Build the project either using 'Release' or 'Debug' in substitution for <BUILD_TYPE>
 ```shell
-cd TerrariaGL
+cd ANN-in-C
 mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=<BUILD_TYPE> ..

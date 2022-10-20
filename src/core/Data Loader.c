@@ -69,6 +69,8 @@ uint32_t num_features_of_csv(const char* path){
 Data read_csv(const char* path, uint32_t num_rows, uint32_t num_cols, uint32_t target_column, uint32_t num_targets){
     
     Data data;
+    //TODO make it clear that num_rows is the number of desired data points and not the number of file rows
+    //IF num rows doesnt equal file rows then bad shit happens, hence the matrix count < num_rows on the loop
     data.inputs = (Matrix*) calloc(sizeof(Matrix), num_rows);
     data.outputs = (Matrix*) calloc(sizeof(Matrix), num_rows);
     data.num_data_points = num_rows;
@@ -88,7 +90,7 @@ Data read_csv(const char* path, uint32_t num_rows, uint32_t num_cols, uint32_t t
     
     uint32_t token_count = 0;
     uint32_t matrix_count = 0;
-    while (!feof(file_ptr)){
+    while (!feof(file_ptr) && matrix_count < num_rows){
         fgets(line_buffer, CHAR_BUFF_SIZE, file_ptr);
         token = strtok(line_buffer, ",");
         
@@ -117,12 +119,11 @@ Data read_csv(const char* path, uint32_t num_rows, uint32_t num_cols, uint32_t t
             token_count++;
             token = strtok(NULL, ",");
         }while(token != NULL);
-        
+
         matrix_count++;
     }
     
     fclose(file_ptr);
-
     return data;
 }
 

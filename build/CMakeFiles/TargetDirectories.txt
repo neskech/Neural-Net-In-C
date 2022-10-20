@@ -1,0 +1,3 @@
+/Users/shauntemellor/Documents/CS/comsci/Projects/Neural Net/build/CMakeFiles/main.dir
+/Users/shauntemellor/Documents/CS/comsci/Projects/Neural Net/build/CMakeFiles/edit_cache.dir
+/Users/shauntemellor/Documents/CS/comsci/Projects/Neural Net/build/CMakeFiles/rebuild_cache.dir

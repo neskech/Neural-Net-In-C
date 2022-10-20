@@ -32,7 +32,7 @@ float cross_entropy(Matrix* pred, Matrix* observ){
     for (size_t i = 0; i < pred->rows * pred->cols; i++){
          //anything thats not the desired classification will
          //have an observed value of 0, cancelling out the log
-         sum += observ->values[i] * -log(pred->values[i]);
+         sum += observ->values[i] * -log(pred->values[i] + 0.00001f);
     }
     return sum / (pred->cols * pred->rows);
 }
@@ -41,11 +41,12 @@ Matrix cross_entropy_deriv(Matrix* pred, Matrix* observ){
     Matrix m = create_matrix(pred->rows, pred->cols); //Vector
 
     for (size_t i = 0; i < pred->rows * pred->cols; i++){
-       if (observ->values[i] == 1.0f){        
-            m.values[i] = - 1.0f / (pred->values[i]);
+       if (observ->values[i] == 1.0f){ 
+            set_values_with(&m, - 1.0f / (pred->values[i] + 0.000001f)); 
             break;
        }
     }
+
     return m;
 }
 
@@ -53,7 +54,8 @@ float bin_cross_entropy(Matrix* pred, Matrix* observ){
     //OBSERV and PRED vector should be size 1
     float o = observ->values[0];
     float p = pred->values[0];
-    float loss = o * -log(p) + (1.0f - o) * -log(1.0f - p);
+    float epsillon = 0.00001f;
+    float loss = o * -log(p + epsillon) + (1.0f - o) * -log(1.0f - p + epsillon);
     return loss;
 }
 
@@ -61,7 +63,8 @@ Matrix bin_cross_entropy_deriv(Matrix* pred, Matrix* observ){
     Matrix m = create_matrix(pred->rows, pred->cols); //Vector
     float o = observ->values[0];
     float p = pred->values[0];
-    m.values[0] = -o / p + (1.0f - o) / (1.0f - p);
+    float epsillon = 0.00001f;
+    m.values[0] = -o / (p + epsillon) + (1.0f - o) / (1.0f - p + epsillon);
     return m;
 }
 

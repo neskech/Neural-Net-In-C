@@ -317,11 +317,12 @@ Matrix eval(Model* m, Matrix* x){
         
         //add the biases
         add_in_place(&running, m->biases + i);
+
+        
         //apply the activation function
         act_func(&running, get(&m->activations, i));
         
     }
-    
     return running; //will have to clean up the return value...
 }
 
@@ -334,6 +335,16 @@ float loss_on_dataset(Model* m, Matrix* x, Matrix* y, uint32_t num_data_points){
         delete_matrix(&eval_);
     }
     return summed_loss / num_data_points;
+}
+
+float accuracy_on_dataset(Model* m, Matrix* x, Matrix* y, uint32_t num_data_points){
+    float num_correct = 0.0f;
+    for (size_t i = 0; i < num_data_points; i++){
+        Matrix eval_ = eval(m, x + i);
+        num_correct += argmax(&eval_) == argmax(y + i);
+        delete_matrix(&eval_);
+    }
+    return num_correct / num_data_points;
 }
 
 static size_t total_params(Model* m){
@@ -354,8 +365,8 @@ void summary(Model* m, uint8_t print_matrices){
             printf(", ");
     }
     
-    const char* act_names[6] = { "reLu", "sigmoid", "hyperbolic tangent", "soft plus", "linear", "sotfmax" };
-    const char* loss_names[2] = { "least squares", "cross entropy" };
+    const char* act_names[7] = { "reLu", "leaky reLu", "sigmoid", "hyperbolic tangent", "soft plus", "linear", "sotfmax" };
+    const char* loss_names[3] = { "least squares", "cross entropy", "binary cross entropy" };
     
     printf("\n------------------------------------------\nActivation Functions: ");
     for (size_t i = 0; i < m->num_layers - 1; i++){
