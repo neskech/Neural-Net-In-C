@@ -39,6 +39,7 @@ cmake --build .
 - Activation Functions
   - 
    - Relu
+   - Leaky Relu
    - Sigmoid
    - Soft Plus
    - Hyperbolic Tangent
@@ -48,6 +49,7 @@ cmake --build .
 - Loss Functions
   -
     - Least Squares
+    - Binary Cross Entropy
 
 - Other
   -
